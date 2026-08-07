@@ -1,0 +1,9 @@
+# Dev profile overrides
+logging:
+  level:
+    com.pvrlabs.payment: DEBUG
+
+management:
+  endpoint:
+    health:
+      show-details: always

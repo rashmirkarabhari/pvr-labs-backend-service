@@ -1,0 +1,73 @@
+server:
+  port: ${SERVER_PORT:8085}
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: pvr-labs-payment-service
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    default-property-inclusion: non_null
+
+# ---------------------------------------------------------------------------
+# Cashfree Payment Gateway – NEVER expose these values to the frontend.
+# Provide them via environment variables or a secrets manager in production.
+# ---------------------------------------------------------------------------
+cashfree:
+  client-id: ${CASHFREE_CLIENT_ID:}
+  client-secret: ${CASHFREE_CLIENT_SECRET:}
+  environment: ${CASHFREE_ENVIRONMENT:SANDBOX}   # SANDBOX | PRODUCTION
+  api-version: ${CASHFREE_API_VERSION:2025-01-01}
+  return-url: ${CASHFREE_RETURN_URL:http://localhost:4200/payment/callback}
+  notify-url: ${CASHFREE_NOTIFY_URL:http://localhost:8085/api/payment/webhook}
+
+# CORS – Angular frontend origins
+app:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200,http://127.0.0.1:4200}
+    allowed-methods: GET,POST,PUT,PATCH,DELETE,OPTIONS
+    allowed-headers: "*"
+    allow-credentials: true
+    max-age: 3600
+
+# Future microservice base URLs (placeholders for Order / Product / User)
+services:
+  order:
+    base-url: ${ORDER_SERVICE_URL:http://localhost:8081}
+  product:
+    base-url: ${PRODUCT_SERVICE_URL:http://localhost:8082}
+  user:
+    base-url: ${USER_SERVICE_URL:http://localhost:8083}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when_authorized
+  info:
+    env:
+      enabled: true
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  show-actuator: false
+
+logging:
+  level:
+    root: INFO
+    com.pvrlabs.payment: DEBUG
+    com.cashfree: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
