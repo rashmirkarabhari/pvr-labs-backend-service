@@ -24,7 +24,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(PaymentException.class)
     public ResponseEntity<ErrorResponse> handlePaymentException(PaymentException ex, HttpServletRequest request) {
         log.warn("Payment error [{}]: {}", ex.getCode(), ex.getMessage());
-        return build(ex.getStatus(), ex.getCode(), ex.getMessage(), request.getRequestURI(), null);
+        ErrorResponse body = ErrorResponse.builder()
+                .timestamp(Instant.now())
+                .status(ex.getStatus().value())
+                .error(ex.getCode())
+                .message(ex.getMessage())
+                .path(request.getRequestURI())
+                .cashfreeType(ex.getCashfreeType())
+                .build();
+        return ResponseEntity.status(ex.getStatus()).body(body);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

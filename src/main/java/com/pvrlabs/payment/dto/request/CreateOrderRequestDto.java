@@ -3,8 +3,6 @@ package com.pvrlabs.payment.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -28,10 +26,10 @@ public class CreateOrderRequestDto {
     @Schema(description = "Order amount in major currency units", example = "1499.00")
     private BigDecimal orderAmount;
 
-    @NotBlank(message = "Currency is required")
-    @Pattern(regexp = "INR|USD|EUR|GBP", message = "Unsupported currency")
-    @Schema(description = "ISO currency code", example = "INR")
-    private String orderCurrency;
+    @Pattern(regexp = "INR", message = "Currency must be INR")
+    @Schema(description = "ISO currency code. Always INR.", example = "INR", defaultValue = "INR")
+    @Builder.Default
+    private String orderCurrency = "INR";
 
     @Size(max = 64, message = "Order ID must be at most 64 characters")
     @Schema(description = "Optional merchant order ID. Generated server-side when omitted.", example = "PVR-ORD-20260806-ABC123")
@@ -53,4 +51,8 @@ public class CreateOrderRequestDto {
 
     @Schema(description = "Optional authenticated user ID from User service")
     private String userId;
+
+    @Valid
+    @Schema(description = "Checkout snapshot for confirmation emails after Cashfree verifies payment")
+    private OrderSnapshotDto orderSnapshot;
 }

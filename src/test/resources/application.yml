@@ -1,0 +1,11 @@
+cashfree:
+  client-id: test-client-id
+  client-secret: test-client-secret
+  environment: SANDBOX
+  api-version: 2025-01-01
+  return-url: http://localhost:4200/checkout?order_id={order_id}
+  notify-url:
+
+app:
+  mail:
+    enabled: false

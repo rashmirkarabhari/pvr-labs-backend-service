@@ -11,5 +11,7 @@ public interface PaymentService {
 
     PaymentStatusResponseDto getPaymentStatus(String orderId);
 
+    PaymentStatusResponseDto verifyPayment(String orderId, String paymentId);
+
     WebhookAckResponseDto handleWebhook(String rawBody, String signature, String timestamp);
 }

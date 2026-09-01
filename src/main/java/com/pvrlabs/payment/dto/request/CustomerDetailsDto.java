@@ -24,7 +24,7 @@ public class CustomerDetailsDto {
 
     @NotBlank(message = "Customer phone is required")
     @Pattern(regexp = "^\\+?[0-9]{8,15}$", message = "Phone must be 8–15 digits, optional leading +")
-    @Schema(description = "Customer phone (digits; optional + for international)", example = "9876543210")
+    @Schema(description = "Indian mobile number. +91 is stripped before Cashfree; API expects 10 digits.", example = "9380930486")
     private String customerPhone;
 
     @Email(message = "Invalid email address")

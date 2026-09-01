@@ -28,6 +28,12 @@ public class PaymentStatusResponseDto {
     @Schema(description = "Aggregated payment status derived from payment attempts")
     private String paymentStatus;
 
+    @Schema(description = "Amount confirmed on a successful Cashfree payment attempt, else order amount")
+    private BigDecimal amountPaid;
+
+    @Schema(description = "Cashfree payment reference (cf_payment_id) when available")
+    private String cfPaymentId;
+
     private List<PaymentAttemptDto> payments;
 
     @Data

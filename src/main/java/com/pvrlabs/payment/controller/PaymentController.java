@@ -1,6 +1,7 @@
 package com.pvrlabs.payment.controller;
 
 import com.pvrlabs.payment.dto.request.CreateOrderRequestDto;
+import com.pvrlabs.payment.dto.request.VerifyPaymentRequestDto;
 import com.pvrlabs.payment.dto.response.ApiResponse;
 import com.pvrlabs.payment.dto.response.CreateOrderResponseDto;
 import com.pvrlabs.payment.dto.response.PaymentStatusResponseDto;
@@ -61,6 +62,22 @@ public class PaymentController {
         log.info("GET /api/payment/status/{}", orderId);
         PaymentStatusResponseDto data = paymentService.getPaymentStatus(orderId);
         return ResponseEntity.ok(ApiResponse.ok(data));
+    }
+
+    @PostMapping("/verify/{orderId}")
+    @Operation(
+            summary = "Verify payment with Cashfree",
+            description = "Re-fetches order and payment status from Cashfree. Does not trust client-reported success. "
+                    + "Idempotent: repeated calls do not create duplicate orders."
+    )
+    public ResponseEntity<ApiResponse<PaymentStatusResponseDto>> verifyPayment(
+            @Parameter(description = "Merchant / Cashfree order ID", example = "PVR-ORD-20260806-ABC123")
+            @PathVariable @NotBlank String orderId,
+            @RequestBody(required = false) VerifyPaymentRequestDto request) {
+        String paymentId = request != null ? request.getPaymentId() : null;
+        log.info("POST /api/payment/verify/{} | paymentIdPresent={}", orderId, paymentId != null && !paymentId.isBlank());
+        PaymentStatusResponseDto data = paymentService.verifyPayment(orderId, paymentId);
+        return ResponseEntity.ok(ApiResponse.ok("Payment verified", data));
     }
 
     @PostMapping(value = "/webhook", consumes = MediaType.APPLICATION_JSON_VALUE)

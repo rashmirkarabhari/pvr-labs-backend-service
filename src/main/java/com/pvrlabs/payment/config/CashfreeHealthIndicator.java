@@ -31,6 +31,7 @@ public class CashfreeHealthIndicator implements HealthIndicator {
         return Health.up()
                 .withDetail("cashfree", "Configured")
                 .withDetail("environment", properties.environment())
+                .withDetail("clientId", CashfreeConfig.maskClientId(properties.clientId()))
                 .build();
     }
 }

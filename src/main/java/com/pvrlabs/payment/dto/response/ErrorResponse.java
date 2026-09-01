@@ -21,6 +21,7 @@ public class ErrorResponse {
     private String error;
     private String message;
     private String path;
+    private String cashfreeType;
     private List<FieldErrorDetail> fieldErrors;
 
     @Data
